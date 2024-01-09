@@ -39,26 +39,24 @@ def parseFileName(filename):
 def findOtherVersions(sceneName):
     versions = []
     hipDir = hou.getenv('hip')
-    hipFiles = [f for f in glob.glob(hipDir + "*/*" + sceneName + "_*.hip")]
+    hipFiles = list(glob.glob(f"{hipDir}*/*{sceneName}_*.hip"))
     print(f"Found Versions in {hipDir}:")
     for file in hipFiles:
         ext = os.path.splitext(file)[1]
         if ext == ".hip":
             filename = os.path.split(file)[1]
-            print(" " + filename)
+            print(f" {filename}")
             versions.append(filename)
     return versions
 
 def saveScene(shotFolder, sceneName, version):
-    newHipname = sceneName+"_v"+format(int(version),'03d')
-    hou.hipFile.setName(shotFolder+"/"+newHipname+".hip")
+    newHipname = f"{sceneName}_v{format(int(version),'03d')}"
+    hou.hipFile.setName(f"{shotFolder}/{newHipname}.hip")
     hou.hipFile.save() 
     print(f"Saved as {shotFolder}/{newHipname}.hip")
  
 def incrementVersion(version):
-    newVersion = int(version[0]) + 1
-    versionString = format(newVersion,'03d')
-    return versionString   
+    return format(int(version[0]) + 1, '03d')
     
 def __main__():            
     hipname = hou.getenv("hipname")
